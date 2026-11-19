@@ -1,28 +1,28 @@
-import express from "express"
+import express from "express";
+import cors from "cors";
+import productsrouter from "./src/routes/products-router.js";
+import categoriasrouter from "./src/routes/categorias-router.js";
 
 const app = express();
 
+app.use(express.json());  // Middleware para parsear el cuerpo de las solicitudes como JSON
+app.use(cors());  // Middleware para permitir solicitudes desde cualquier origen
+
+// Middleware para registrar las solicitudes entrantes
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`);
     next();
 });
 
-const productos = [
-    {id: 1, nombre: "Producto 1", precio: 100},
-    {id: 2, nombre: "Producto 2", precio: 200},
-    {id: 3, nombre: "Producto 3", precio: 300}
-]
-
 app.get("/", (req, res) => {
     res.send("api del curso funcionando");
 });
 
-app.get("/api/productos", (req,res) => {
-    res.json(productos);
-});
+app.use("/api/productos",productsrouter); 
+app.use("/api/categorias",categoriasrouter);
 
 const PORT = 3000;
 
 app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`)
-})
+});
